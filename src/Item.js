@@ -1,5 +1,5 @@
 // import Utils from '@holywater-tech/ads-builder/framework/Utils';
-import Utils from '@holywater-tech/ads-builder/framework/Utils';
+// import Utils from '@holywater-tech/ads-builder/framework/Utils';
 import { EVENTS, LAYERS_DEPTH } from './constants/Constants';
 
 export default class Item extends Phaser.GameObjects.Container {
@@ -78,7 +78,7 @@ export default class Item extends Phaser.GameObjects.Container {
 
             this.scene.tutorialWords = [...newTutorialWords];
             this.isGlow = true;
-            if (this.scene.tutorialWords[0]) {
+            if (this.scene.tutorialWords[0] && !this.scene.correct) {
                 this.scene.items.showHand(this.scene.tutorialWords[0], 1000);
             }
 
@@ -98,7 +98,7 @@ export default class Item extends Phaser.GameObjects.Container {
             this.scene.choice = choice;
             this.isGlow = false;
         }
-        if (this.scene.tutorialWords[0]) {
+        if (this.scene.tutorialWords[0] && !this.scene.correct) {
             this.scene.items.showHand(this.scene.tutorialWords[0], 1000);
         }
 
@@ -116,7 +116,7 @@ export default class Item extends Phaser.GameObjects.Container {
     }
 
     onItemsClick() {
-        if (this.scene.counter === 3 && this.scene.isTutorial && this.scene.tutorialWords.length === 1) {
+        if (this.scene.counter === 3 && this.scene.isTutorial && !this.scene.correct && this.scene.tutorialWords.length === 1) {
             this.scene.btn_submit.showHand();
             this.scene.isTutorial = false;
         }

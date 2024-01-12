@@ -1,7 +1,7 @@
 import Scene from '@holywater-tech/ads-builder/framework/components/Scene';
 import Utils from '@holywater-tech/ads-builder/framework/Utils';
 import Item from './Item';
-import { EVENTS, LAYERS_DEPTH, POSITION, POSITION4x4, SHEETS } from './constants/Constants';
+import { EVENTS, LAYERS_DEPTH, POSITION, POSITION4x4, SCALE, SHEETS } from './constants/Constants';
 // import { AUDIO, SHEETS } from './constants/assets';
 
 export default class Items extends Phaser.GameObjects.Container {
@@ -16,7 +16,7 @@ export default class Items extends Phaser.GameObjects.Container {
         this.isOpenStore = isOpenStore || false;
         this.isPortrait = this.scene.game.size.isPortrait;
         this.gap = this.isPortrait ? 170 : 180;
-
+        this.isHorizontal = window.innerWidth > window.innerHeight;
         this.counter = 0;
         this.tutorialWords = ['leia', 'han', 'luke', 'anakin'];
         this.initAssets();
@@ -135,10 +135,10 @@ export default class Items extends Phaser.GameObjects.Container {
     show(options = {}) {
         this.tweens.add({
             targets: this,
-            lScaleX: 0.7,
-            lScaleY: 0.7,
-            pScaleX: 0.8,
-            pScaleY: 0.8,
+            lScaleX: SCALE.choices[0],
+            lScaleY: SCALE.choices[1],
+            pScaleX: SCALE.choices[2],
+            pScaleY: SCALE.choices[3],
             duration: 500,
             delay: 700,
             ease: 'Sine.out',

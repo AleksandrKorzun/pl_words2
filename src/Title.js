@@ -1,12 +1,14 @@
 // import { SHEETS } from './constants/assets';
 
+import { POSITION } from './constants/Constants';
+
 export default class Title extends Phaser.GameObjects.Container {
     constructor(scene, title) {
         super(scene, 0, 0);
         this.tweens = scene.tweens;
         this.addProperties(['pos', 'scale'])
-            .setCustomPosition(0, 90, 0, 100)
-            .setCustomScale(0.3, 0.3, 0.3, 0.3)
+            .setCustomPosition(...POSITION.title)
+            .setCustomScale(0.28, 0.28, 0.3, 0.3)
             .setCustomAlign('Top')
             .setDepth(25)
             .setAlpha(0);

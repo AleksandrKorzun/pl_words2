@@ -33,7 +33,9 @@
         "webpack-dev-server": "^4.2.1"
     },
     "dependencies": {
+        "@google-analytics/data": "^4.3.0",
         "amplitude-js": "^8.21.9",
+        "ga-gtag": "^1.2.0",
         "patch-package": "^8.0.0"
     }
 }

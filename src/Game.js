@@ -1,13 +1,13 @@
 import ParentScene from '@holywater-tech/ads-builder/framework/components/Scene';
 import Background from '@holywater-tech/ads-builder/framework/components/ui/Background';
+import { gtag, install } from 'ga-gtag';
 import Title from './Title';
 import Items from './Items';
 import { EVENTS, PAIR_WORDS, POSITION, POSITION4x4, SCALE, WORDS } from './constants/Constants';
 import Mistakes from './Mistakes';
 import Buttons from './Buttons';
-import { ampEvent, ampEventWithEventProperty, ampSetUserId, ampSetUserProperty } from './utils/amplituda';
 
-ampSetUserId(Date.now());
+install('G-GXV29H0F6T');
 export default class Game extends ParentScene {
     create() {
         this.addBackground();
@@ -24,7 +24,9 @@ export default class Game extends ParentScene {
         this.isTutorial = true;
         this.tutorialWords = ['CHURCHES', 'TEMPLES', 'MONASTERIES', 'MOSQUES'];
 
-        ampEventWithEventProperty('start_level', { playable: 'pl_connection_2' });
+        gtag('event', 'playable_view', {
+            playable_name: 'connection_word_2',
+        });
     }
 
     initListeners() {
@@ -60,16 +62,16 @@ export default class Game extends ParentScene {
         this.title = new Title(this, 'title');
         this.sub_title = new Title(this, 'subtitle')
             .addProperties(['pos', 'scale'])
-            .setCustomScale(0.5, 0.5, 0.5, 0.5)
+            .setCustomScale(0.4, 0.4, 0.4, 0.4)
             .setCustomAlign('Top')
             .setDepth(26)
-            .setCustomPosition(0, 40, 9, 40);
+            .setCustomPosition(...POSITION.subTitle);
         this.hint = new Title(this, 'hint')
             .addProperties(['pos', 'scale'])
-            .setCustomScale(0.35, 0.35, 0.35, 0.35)
+            .setCustomScale(0.25, 0.25, 0.25, 0.25)
             .setCustomAlign('Top')
             .setDepth(26)
-            .setCustomPosition(0, 130, 9, 150);
+            .setCustomPosition(...POSITION.hint);
         this.correct_title = new Title(this, 'title2')
             .addProperties(['pos', 'scale'])
             .setCustomScale(...SCALE.title)
@@ -128,9 +130,12 @@ export default class Game extends ParentScene {
     }
 
     addButtons() {
-        this.btn_shuffle = new Buttons(this, 'btn_shuffle', { x: -200, y: 0 }, () => this.onShuffleClick());
-        this.btn_deselect = new Buttons(this, 'btn_deselect', { x: 0, y: 0 }, () => this.onDeselectClick());
-        this.btn_submit = new Buttons(this, 'btn_submit', { x: 200, y: 0 }, () => this.onSubmitClick());
+        this.btn_shuffle = new Buttons(this, 'btn_shuffle', { lx: 0, ly: -300, px: -200, py: 0 }, () => this.onShuffleClick());
+        this.btn_deselect = new Buttons(this, 'btn_deselect', { lx: 0, ly: -200, px: 0, py: 0 }, () => this.onDeselectClick());
+        this.btn_submit = new Buttons(this, 'btn_submit', { lx: 0, ly: -100, px: 200, py: 0 }, () => this.onSubmitClick());
+        this.btn_shuffle.setScale(0.95);
+        this.btn_deselect.setScale(0.95);
+        this.btn_submit.setScale(0.95);
         this.mainContainer.add([this.btn_shuffle, this.btn_deselect, this.btn_submit]);
         this.sort();
     }
@@ -149,11 +154,35 @@ export default class Game extends ParentScene {
         }
         const category = this.checkAnswer();
         if (category) {
+            this.items.removeHandTutorial();
             // Utils.addAudio(this, 'correct', 0.3, false);
             this.hint.remove();
-            this[`${category}_title`].setCustomPosition(0, this.correct * 100 + 170, 0, this.correct * 100 + 230);
+            this[`${category}_title`].setCustomPosition(0, this.correct * 100 + 190, 0, this.correct * 100 + 250);
             this.correct += 1;
-            ampEventWithEventProperty('found_group_words', { level: this.correct });
+            if (category === 'brands') {
+                gtag('event', 'Successfully create group', {
+                    name: 'luxury brand',
+                    number: this.correct,
+                });
+            }
+            if (category === 'religious') {
+                gtag('event', 'Successfully create group', {
+                    name: 'religious places',
+                    number: this.correct,
+                });
+            }
+            if (category === 'travel') {
+                gtag('event', 'Successfully create group', {
+                    name: 'travel gear',
+                    number: this.correct,
+                });
+            }
+            if (category === 'religious') {
+                gtag('event', 'Successfully create group', {
+                    name: 'religious places',
+                    number: this.correct,
+                });
+            }
             this.counter = 0;
             this.choice = [];
             this.correct_title.blink();
@@ -170,8 +199,8 @@ export default class Game extends ParentScene {
                 setTimeout(() => {
                     // Utils.addAudio(this, 'win', 0.3, false);
                     this.onCompleted();
-                    this.game.network.addClickToStore(this.bg);
-                }, 1200);
+                    this.bg.setInteractive().on('pointerdown', () => this.openStore('success_page'), this);
+                }, 3000);
             }
         } else {
             // Utils.addAudio(this, 'wrong', 0.3, false);
@@ -187,7 +216,7 @@ export default class Game extends ParentScene {
                 this.btn_deselect.removeInteractive();
                 setTimeout(() => {
                     this.onFailed();
-                    this.bg.setInteractive().on('pointerdown', this.openStore('bg'), this);
+                    this.bg.setInteractive().on('pointerdown', () => this.openStore('fail_page'), this);
                 }, 1200);
             }
         }
@@ -209,7 +238,7 @@ export default class Game extends ParentScene {
             .setCustomAlign('Center')
             .setDepth(101);
 
-        this.cta.setCustomPosition(0, -200, 0, -200).setScale(1).setDepth(200).setAlpha(0);
+        this.cta.setCustomPosition(0, -200, 0, -200).setScale(1.2).setDepth(200).setAlpha(0);
         setTimeout(() => {
             this.cta.setAlpha(1);
             this.win_title.show();
@@ -240,7 +269,7 @@ export default class Game extends ParentScene {
             .setCustomAlign('Center')
             .setDepth(101);
 
-        this.cta.setCustomPosition(0, -200, 0, -200).setScale(1).setDepth(200).setAlpha(0);
+        this.cta.setCustomPosition(0, -200, 0, -200).setScale(1.2).setDepth(200).setAlpha(0);
         setTimeout(() => {
             this.cta.setAlpha(1);
             this.win_title.show();
@@ -277,14 +306,14 @@ export default class Game extends ParentScene {
     }
 
     addCta() {
-        this.cta = new Buttons(this, 'button', { lx: 0, ly: 0, px: 0, py: 0 }, () => this.openStore('download'))
+        this.cta = new Buttons(this, 'button', { lx: 0, ly: 0, px: 0, py: 0 }, () => this.openStore('front_page'))
             .setCustomAlign('Bottom')
-            .setCustomPosition(0, -50, 0, -50)
-            .setScale(0.6);
+            .setCustomPosition(0, -100, 0, -100)
+            .setScale(0.8);
 
         this.tweens.add({
             targets: this.cta,
-            scale: '*=1.1',
+            scale: '*=1.2',
             duration: 500,
             yoyo: true,
             repeat: -1,
@@ -320,6 +349,8 @@ export default class Game extends ParentScene {
 
     openStore(placement) {
         this.game.network.openStore();
-        ampEventWithEventProperty('go_to_store', { placement });
+        gtag('event', 'download click', {
+            placement,
+        });
     }
 }

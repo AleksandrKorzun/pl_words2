@@ -24,15 +24,23 @@ export const LAYERS_DEPTH = {
     HAND_TUTORIAL: 44,
 };
 
+const isSmallPhone =
+    (window.innerWidth / window.innerHeight >= 1.6 && window.innerWidth / window.innerHeight < 1.8) ||
+    (window.innerWidth / window.innerHeight >= 0.56 && window.innerWidth / window.innerHeight < 0.63);
+
+const posPhoneChoices = isSmallPhone ? [0, 450, 0, 450] : [0, 410, 0, 490];
 export const POSITION = {
-    choices: Screen.phoneProportions ? [0, 380, 0, 490] : [0, 350, 0, 400],
-    mistakes: Screen.phoneProportions ? [0, 150, 0, 220] : [0, 130, 0, 180],
-    buttons: Screen.phoneProportions ? [0, 230, 0, 290] : [0, 200, 0, 250],
-    messageTitle: Screen.phoneProportions ? [0, -150, 0, -150] : [0, -150, 0, -120],
+    choices: Screen.phoneProportions ? posPhoneChoices : [0, 350, 0, 400],
+    mistakes: Screen.phoneProportions ? [500, -200, 0, 180] : [0, 130, 0, 150],
+    buttons: Screen.phoneProportions ? [500, 230, 0, 250] : [0, 200, 0, 220],
+    messageTitle: Screen.phoneProportions ? [0, -170, 0, -190] : [0, -170, 0, -170],
     level: Screen.phoneProportions ? [0, 0, 0, 0] : [0, 0, 0, 0],
+    subTitle: Screen.phoneProportions ? [0, 50, 9, 80] : [0, 40, 9, 60],
+    title: Screen.phoneProportions ? [0, 110, 0, 150] : [0, 90, 0, 125],
+    hint: Screen.phoneProportions ? [0, 150, 9, 200] : [0, 130, 9, 180],
 };
 export const SCALE = {
-    choices: Screen.phoneProportions ? [0.8, 0.8, 0.8, 0.8] : [0.8, 0.8, 0.8, 0.8],
+    choices: Screen.phoneProportions ? [0.93, 0.93, 0.8, 0.8] : [0.7, 0.7, 0.7, 0.7],
     mistakes: Screen.phoneProportions ? [0, 180, 0, 230] : [0, 180, 0, 280],
     buttons: Screen.phoneProportions ? [0, 250, 0, 300] : [0, 250, 0, 350],
     title: Screen.phoneProportions ? [0.22, 0.22, 0.22, 0.22] : [0.22, 0.22, 0.22, 0.22],
